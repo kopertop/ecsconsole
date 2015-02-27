@@ -1,0 +1,38 @@
+<md-content layout="column" flex class="md-padding">
+	
+	<md-content layout="column" flex class="md-padding" ng-if="!authenticated">
+		<md-card>
+			<md-card-content>
+				<h2>Please set up your AWS Access Keys </h2>
+				<p>
+					<md-input-container>
+						<label>Access Key ID</label>
+						<input required name="AWSAccessKeyId" ng-model="credentials.accessKeyId">
+					</md-input-container>
+
+					<md-input-container>
+						<label>Secrete Access Key</label>
+						<input required name="AWSSecretKey" ng-model="credentials.secretAccessKey">
+					</md-input-container>
+					<md-button md-no-ink class="md-raised md-primary" ng-click="setCredentials();">Submit</md-button>
+				</p>
+			</md-card-content>
+		</md-card>
+	</md-content>
+
+	<md-list ng-if="authenticated">
+		<md-item ng-repeat="task in tasks">
+			<md-item-content>
+				<div class="md-tile-left">
+					<i ng-if="task.status.running" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
+					<i ng-if="task.status.stopped" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
+				</div>
+				<div class="md-tile-content">
+					<h3 ng-bind="task.name"></h3>
+					<h4 ng-bind="task.id"></h4>
+					<p ng-bind="task.notes"></p>
+				</div>
+			</md-item-content>
+		</md-item>
+	</md-list>
+</md-content>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ECSTasker" ng-csp>
+	<head>
+		<meta charset="utf-8" />
+		<title>ECS Task Manager</title>
+
+		<!-- CDN stylesheets  -->
+		<link href="styles/angular-material.min.css" rel="stylesheet">
+		<link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+		<!-- Custom Stylesheets -->
+		<link href="styles/main.css" rel="stylesheet">
+
+		<!-- AWS Dependencies -->
+		<script src="scripts/aws-sdk.js"></script>
+
+		<!-- Angular Material Dependencies -->
+		<script src="bower_components/angular/angular.min.js"></script>
+		<script src="scripts/angular-animate.min.js"></script>
+		<script src="scripts/angular-aria.min.js"></script>
+		<script src="scripts/angular-route.min.js"></script>
+
+		<!-- Angular Material Styles -->
+		<script src="scripts/angular-material.min.js"></script>
+
+		<!-- Other Scripts -->
+		<script src="bower_components/lodash/lodash.min.js"></script>
+
+	</head>
+	<body layout="column">
+		<md-toolbar layout="row">
+			<button ng-click="toggleSidenav('left')" hide-gt-md class="menuBtn">
+				<span class="visually-hidden">Menu</span>
+			</button>
+			<h1>ECS Task Manager</h1>
+		</md-toolbar>
+		<div layout="row" flex>
+			<!--
+			<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-md')">
+				<h2 class="menu-heading">Tasks</h2>
+			</md-sidenav>
+			-->
+			<div layout="column" flex id="content" ng-view></div>
+		</div>
+		<!-- Our App -->
+		<script src="scripts/app.js"></script>
+		<script src="scripts/controllers.js"></script>
+		<script src="scripts/services.js"></script>
+		<script src="scripts/directives.js"></script>
+
+
+	</body>
+</html>

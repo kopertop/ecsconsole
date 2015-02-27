@@ -1,0 +1,10 @@
+node_modules
+public/bower_components
+dist
+.bin/
+.sass-cache/
+.tmp/
+*.swp
+coverage/
+shippable/
+newrelic_agent.log

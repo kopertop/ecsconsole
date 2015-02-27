@@ -1,0 +1,18 @@
+{
+	"manifest_version": 2,
+
+	"name": "ECS Console",
+	"description": "Console for managing Amazon EC2 Container Service Tasks",
+	"version": "0.0.1",
+
+	"app": {
+		"launch": {
+			"local_path": "index.html"
+		}
+	},
+
+	"permissions": [
+		"tabs",
+		"https://ecs.us-east-1.amazonaws.com/*"
+	]
+}

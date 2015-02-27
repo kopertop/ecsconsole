@@ -1,0 +1,13 @@
+<md-content layout="column" flex class="md-padding">
+	<md-card>
+		<md-card-content>
+			<h2>Please Log In to ECS Tasker</h2>
+			<p>
+				<div google-signin
+					client-id="11371004766-9aptabstrbp7ufbieehq0nc6mmmh4l44"
+					after-signin="signedIn(oauth)"></div>
+				<pre>{{ user | json }}</pre>
+			</p>
+		</md-card-content>
+	</md-card>
+</md-content>
