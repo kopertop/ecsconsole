@@ -8,23 +8,7 @@ angular.module('ECSTasker')
 		};
 		$scope.authenticated = false;
 
-		$scope.tasks = [
-			{
-				id: 'foo',
-				status: {
-					running: true,
-				},
-				name: 'Running Process',
-			},
-			{
-				id: 'foo',
-				status: {
-					stopped: true,
-				},
-				name: 'Stopped Process',
-			},
-
-		];
+		$scope.tasks = [];
 		$scope.toggleSidenav = function(menuId) {
 			$mdSidenav(menuId).toggle();
 		};
@@ -42,7 +26,26 @@ angular.module('ECSTasker')
 		$scope.loadTasks = function loadTasks(){
 			var ecs = new AWSService.ECS();
 			ecs.listTasks({}, function(err, data){
-				console.log(data);
+				$scope.tasks.length = 0;
+				// Lookup all the tasks
+				ecs.describeTasks({ tasks: data.taskArns }, function(err, tasks){
+					_.forEach(tasks.tasks, function(task){
+						// Describe the task definition
+						ecs.describeTaskDefinition({ taskDefinition: task.taskDefinitionArn }, function(err, taskDefinition){
+							console.log(task, taskDefinition.taskDefinition.containerDefinitions[0].name);
+							$scope.tasks.push({
+								id: task.taskArn.split('/')[1],
+								name: taskDefinition.taskDefinition.containerDefinitions[0].name,
+								status: {
+									name: task.lastStatus,
+									running: task.lastStatus === 'RUNNING',
+									stopped: task.lastStatus !== 'RUNNING',
+								},
+							});
+							$scope.$apply();
+						});
+					});
+				});
 			});
 		};
 		
