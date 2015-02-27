@@ -1,34 +1,47 @@
 // scripts/controllers.js
 angular.module('ECSTasker')
-	.controller('MainCtrl', function($scope, $mdSidenav, $rootScope, AWSService, localStorageService, $interval){
+	.controller('MenuCtrl', function($scope, $mdSidenav, $location){
 		'use strict';
-		$scope.credentials = {
-			accessKeyId: localStorageService.get('AWSAccessKeyId'),
-			secretAccessKey: localStorageService.get('AWSSecretAccessKey'),
+		$scope.menu = {
+			sections: [
+				{
+					id: 'home',
+					type: 'link',
+					href: '/',
+					name: 'Running Tasks',
+				},
+				{
+					id: 'task_runner',
+					type: 'link',
+					href: '/task-runner',
+					name: 'Launch Task',
+				},
+				{
+					id: 'settings',
+					type: 'link',
+					href: '/settings',
+					name: 'Settings',
+				}
+
+			],
 		};
-		$scope.authenticated = false;
+		$scope.goTo = function goTo(href){
+			$location.path(href);
+		};
+	}).controller('MainCtrl', function($scope, $mdSidenav, $rootScope, $interval, $location){
+		'use strict';
 
 		$scope.tasks = [];
 		$scope.toggleSidenav = function(menuId) {
 			$mdSidenav(menuId).toggle();
 		};
-		$scope.setCredentials = function(){
-			localStorageService.set('AWSAccessKeyId', $scope.credentials.accessKeyId);
-			localStorageService.set('AWSSecretAccessKey', $scope.credentials.secretAccessKey);
-			var creds = new AWSService.Credentials($scope.credentials);
-			AWSService.config.region = 'us-east-1';
-			AWSService.config.credentials = creds;
-			$scope.authenticated = true;
-			$scope.loadTasks();
-		};
 
 		// Load all Tasks
 		$scope.loadTasks = function loadTasks(){
-			var ecs = new AWSService.ECS();
-			ecs.listTasks({}, function(err, data){
+			$rootScope.ecs.listTasks({}, function(err, data){
 				$scope.tasks.length = 0;
 				// Lookup all the tasks
-				ecs.describeTasks({ tasks: data.taskArns }, function(err, tasks){
+				$rootScope.ecs.describeTasks({ tasks: data.taskArns }, function(err, tasks){
 					_.forEach(tasks.tasks, function(task){
 						$scope.tasks.push({
 							id: task.taskArn.split('/')[1],
@@ -45,14 +58,71 @@ angular.module('ECSTasker')
 			});
 		};
 
-		// Reload tasks every 30 seconds
-		$interval(function(){
+		if($rootScope.ecs === undefined){
+			$location.path('/settings');
+		} else {
+			// Reload tasks every 30 seconds
+			$interval(function(){
+				$scope.loadTasks();
+			}, 30000);
 			$scope.loadTasks();
-		}, 30000);
-		
+		}
 
 		$scope.showTaskActions = function showTaskActions(task){
 			console.log('ShowTask actions', task);
+		};
+
+	}).controller('TaskRunnerCtrl', function($scope, $rootScope, $location, $mdToast){
+		'use strict';
+		$scope.taskDefinitions = [];
+
+		if($rootScope.ecs === undefined){
+			$location.path('/settings');
+		} else {
+			$rootScope.ecs.listTaskDefinitionFamilies({}, function(err, data){
+				$scope.taskDefinitions.length = 0;
+				_.forEach(data.families, function(td){
+					$scope.taskDefinitions.push(td);
+				});
+				$scope.$apply();
+			});
+		}
+
+		/**
+		 * Start a task
+		 */
+		$scope.startTask = function startTask(td){
+			// Ask how many to launch
+
+			// Confirm Launch
+			$mdToast.show(
+				$mdToast.simple()
+				.content('Launching Task: ' + td)
+				.position('top right')
+				.hideDelay(3000)
+				);
+			// Launch
+			$rootScope.ecs.runTask({
+				taskDefinition: td
+			}, function(err, data){
+				console.log(data);
+			});
+		};
+
+	}).controller('SettingsCtrl', function($scope, $rootScope, AWSService, localStorageService, $location){
+		'use strict';
+		$rootScope.credentials = {
+			accessKeyId: localStorageService.get('AWSAccessKeyId'),
+			secretAccessKey: localStorageService.get('AWSSecretAccessKey'),
+		};
+		$scope.setCredentials = function(){
+			localStorageService.set('AWSAccessKeyId', $rootScope.credentials.accessKeyId);
+			localStorageService.set('AWSSecretAccessKey', $rootScope.credentials.secretAccessKey);
+			var creds = new AWSService.Credentials($rootScope.credentials);
+			AWSService.config.region = 'us-east-1';
+			AWSService.config.credentials = creds;
+			$rootScope.ecs = new AWSService.ECS();
+			$location.path('/');
 		};
 
 	});

@@ -1,45 +1,23 @@
 <md-content layout="column" flex class="md-padding">
-	
-	<md-content layout="column" flex class="md-padding" ng-if="!authenticated">
-		<md-card>
-			<md-card-content>
-				<h2>Please set up your AWS Access Keys </h2>
-				<p>
-					<md-input-container>
-						<label>Access Key ID</label>
-						<input required name="AWSAccessKeyId" ng-model="credentials.accessKeyId">
-					</md-input-container>
-
-					<md-input-container>
-						<label>Secrete Access Key</label>
-						<input required name="AWSSecretKey" ng-model="credentials.secretAccessKey">
-					</md-input-container>
-					<md-button md-no-ink class="md-raised md-primary" ng-click="setCredentials();">Submit</md-button>
-				</p>
-			</md-card-content>
-		</md-card>
-	</md-content>
-
-	<div ng-if="authenticated">
-		<md-grid-list
-			md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4"
-			md-row-height-gt-md="1:1" md-row-height="2:2"
-			md-gutter="12x" md-gutter-gt-sm="8px">
-			<md-grid-tile ng-repeat="task in tasks" ng-click="showTaskActions(task.id)" >
-				<md-card id="{{task.id}}" style="cursor: pointer;">
-					<md-card-content>
-						<div layout="row" layout-align="center center">
-							<div style="width: 4em">
-								<i ng-if="task.status.running" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
-								<i ng-if="task.status.stopped" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
-							</div>
-							<div flex>
-								<h3 ng-bind="task.name"></h3>
-								<code ng-bind="task.id"></code>
-							</div>
+	<h2>Running Tasks</h2>
+	<md-grid-list
+		md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4"
+		md-row-height-gt-md="1:1" md-row-height="1:1"
+		md-gutter="2x" md-gutter-gt-sm="4px">
+		<md-grid-tile ng-repeat="task in tasks" ng-click="showTaskActions(task.id)" >
+			<md-card id="{{task.id}}" style="cursor: pointer;">
+				<md-card-content>
+					<div layout="row" layout-align="center center">
+						<div style="width: 4em">
+							<i ng-if="task.status.running" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
+							<i ng-if="task.status.stopped" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
 						</div>
-					</md-card-content>
-				</md-card>
-			</md-grid-tile>
-	</div>
+						<div flex>
+							<h3 ng-bind="task.name"></h3>
+							<code ng-bind="task.id"></code>
+						</div>
+					</div>
+				</md-card-content>
+			</md-card>
+		</md-grid-tile>
 </md-content>

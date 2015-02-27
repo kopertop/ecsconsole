@@ -10,6 +10,14 @@ angular.module('ECSTasker', [
 				controller: 'MainCtrl',
 				templateUrl: 'templates/main.html',
 			})
+			.when('/settings', {
+				controller: 'SettingsCtrl',
+				templateUrl: 'templates/settings.html',
+			})
+			.when('/task-runner', {
+				controller: 'TaskRunnerCtrl',
+				templateUrl: 'templates/task-runner.html',
+			})
 			.otherwise({
 				redirectTo: '/'
 			});
