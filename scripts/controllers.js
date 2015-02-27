@@ -1,6 +1,6 @@
 // scripts/controllers.js
 angular.module('ECSTasker')
-	.controller('MainCtrl', function($scope, $mdSidenav, $rootScope, AWSService, localStorageService){
+	.controller('MainCtrl', function($scope, $mdSidenav, $rootScope, AWSService, localStorageService, $interval){
 		'use strict';
 		$scope.credentials = {
 			accessKeyId: localStorageService.get('AWSAccessKeyId'),
@@ -32,7 +32,6 @@ angular.module('ECSTasker')
 					_.forEach(tasks.tasks, function(task){
 						// Describe the task definition
 						ecs.describeTaskDefinition({ taskDefinition: task.taskDefinitionArn }, function(err, taskDefinition){
-							console.log(task, taskDefinition.taskDefinition.containerDefinitions[0].name);
 							$scope.tasks.push({
 								id: task.taskArn.split('/')[1],
 								name: taskDefinition.taskDefinition.containerDefinitions[0].name,
@@ -48,6 +47,11 @@ angular.module('ECSTasker')
 				});
 			});
 		};
+
+		// Reload tasks every 30 seconds
+		$interval(function(){
+			$scope.loadTasks();
+		}, 30000);
 		
 
 	});
