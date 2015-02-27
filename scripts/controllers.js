@@ -30,20 +30,17 @@ angular.module('ECSTasker')
 				// Lookup all the tasks
 				ecs.describeTasks({ tasks: data.taskArns }, function(err, tasks){
 					_.forEach(tasks.tasks, function(task){
-						// Describe the task definition
-						ecs.describeTaskDefinition({ taskDefinition: task.taskDefinitionArn }, function(err, taskDefinition){
-							$scope.tasks.push({
-								id: task.taskArn.split('/')[1],
-								name: taskDefinition.taskDefinition.containerDefinitions[0].name,
-								status: {
-									name: task.lastStatus,
-									running: task.lastStatus === 'RUNNING',
-									stopped: task.lastStatus !== 'RUNNING',
-								},
-							});
-							$scope.$apply();
+						$scope.tasks.push({
+							id: task.taskArn.split('/')[1],
+							name: task.containers[0].name,
+							status: {
+								name: task.lastStatus,
+								running: task.lastStatus === 'RUNNING',
+								stopped: task.lastStatus !== 'RUNNING',
+							},
 						});
 					});
+					$scope.$apply();
 				});
 			});
 		};
@@ -53,5 +50,9 @@ angular.module('ECSTasker')
 			$scope.loadTasks();
 		}, 30000);
 		
+
+		$scope.showTaskActions = function showTaskActions(task){
+			console.log('ShowTask actions', task);
+		};
 
 	});
