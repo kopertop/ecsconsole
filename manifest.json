@@ -3,7 +3,7 @@
 
 	"name": "ECS Console",
 	"description": "Console for managing Amazon EC2 Container Service Tasks",
-	"version": "0.0.2",
+	"version": "0.1.0",
 
 	"app": {
 		"background": {
