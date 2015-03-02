@@ -4,13 +4,14 @@
 		md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4"
 		md-row-height-gt-md="1:1" md-row-height="1:1"
 		md-gutter="2x" md-gutter-gt-sm="4px">
-		<md-grid-tile ng-repeat="task in tasks" ng-click="showTaskActions(task.id)" >
+		<md-grid-tile ng-repeat="task in tasks" ng-click="showTaskActions(task, $event)" >
 			<md-card id="{{task.id}}" style="cursor: pointer;">
 				<md-card-content>
 					<div layout="row" layout-align="center center">
 						<div style="width: 4em">
 							<i ng-if="task.status.running" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
 							<i ng-if="task.status.stopped" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
+							<i ng-if="task.status.name === 'STOPPING'" class="fa fa-minus-circle" class="status stopping" style="color: #ccc; font-size: 3em;"></i>
 						</div>
 						<div flex>
 							<h3 ng-bind="task.name"></h3>

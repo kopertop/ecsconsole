@@ -28,7 +28,7 @@ angular.module('ECSTasker')
 		$scope.goTo = function goTo(href){
 			$location.path(href);
 		};
-	}).controller('MainCtrl', function($scope, $mdSidenav, $rootScope, $interval, $location){
+	}).controller('MainCtrl', function($scope, $mdSidenav, $mdDialog, $mdToast, $rootScope, $interval, $location){
 		'use strict';
 
 		$scope.tasks = [];
@@ -51,6 +51,7 @@ angular.module('ECSTasker')
 								running: task.lastStatus === 'RUNNING',
 								stopped: task.lastStatus !== 'RUNNING',
 							},
+							data: task,
 						});
 					});
 					$scope.$apply();
@@ -68,8 +69,50 @@ angular.module('ECSTasker')
 			$scope.loadTasks();
 		}
 
-		$scope.showTaskActions = function showTaskActions(task){
-			console.log('ShowTask actions', task);
+		$scope.showTaskActions = function showTaskActions(task, ev){
+			function TaskDialogController($scope, $mdDialog) {
+				$scope.task = task;
+				$scope.hide = function() {
+					$mdDialog.hide();
+				};
+				$scope.cancel = function() {
+					$mdDialog.cancel();
+				};
+				$scope.stop = function() {
+					// Confirm Launch
+					$mdToast.show(
+						$mdToast.simple()
+						.content('Stopping Task: ' + $scope.task.name + ' <' + $scope.task.id + '>')
+						.position('top right')
+						.hideDelay(3000)
+						);
+
+					$scope.task.status.name = 'STOPPING';
+					$scope.task.status.running = false;
+					$scope.task.status.stopped = false;
+
+					$rootScope.ecs.stopTask({
+						task: $scope.task.id,
+					}, function(err, data){
+						if(err){
+							$mdToast.show(
+								$mdToast.simple()
+								.content('Error stopping task: ' + err)
+								.position('top right')
+								.hideDelay(15000)
+								);
+						}
+						console.log(data);
+					});
+
+					$mdDialog.hide();
+				};
+			}
+			$mdDialog.show({
+				controller: TaskDialogController,
+				templateUrl: 'templates/taskActions.html',
+				targetEvent: ev,
+			});
 		};
 
 	}).controller('TaskRunnerCtrl', function($scope, $rootScope, $location, $mdToast){
