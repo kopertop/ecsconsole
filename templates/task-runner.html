@@ -1,15 +1,6 @@
-<md-content layout="column" flex class="md-padding">
-	<h2>Launch Task</h2>
-	<md-grid-list
-		md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4"
-		md-row-height-gt-md="1:1" md-row-height="2:2"
-		md-gutter="12x" md-gutter-gt-sm="8px">
-		<md-grid-tile ng-repeat="td in taskDefinitions" ng-click="startTask(td)" >
-			<md-card id="{{td}}" style="cursor: pointer;">
-				<md-card-content>
-					<h3 ng-bind="td"></h3>
-				</md-card-content>
-			</md-card>
-		</md-grid-tile>
+<h2>Launch Task</h2>
 
-</md-content>
+<md-card style="cursor: pointer" ng-repeat="td in taskDefinitions" ng-click="startTask(td)" flex="25" flex-md="50" flex-sm="100">
+	<md-card-content ng-bind="td">
+	</md-card-content>
+</md-card>
