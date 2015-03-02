@@ -12,7 +12,6 @@
 	},
 
 	"permissions": [
-		"tabs",
-		"https://ecs.us-east-1.amazonaws.com/*"
+		"*://*.amazonaws.com/*"
 	]
 }
