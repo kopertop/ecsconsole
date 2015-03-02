@@ -27,15 +27,17 @@ angular.module('ECSTasker')
 		};
 		$scope.goTo = function goTo(href){
 			$location.path(href);
+			$mdSidenav('left').toggle();
 		};
-	}).controller('MainCtrl', function($scope, $mdSidenav, $mdDialog, $mdToast, $rootScope, $interval, $location){
-		'use strict';
 
-		$scope.tasks = [];
 		$scope.toggleSidenav = function(menuId) {
 			$mdSidenav(menuId).toggle();
 		};
 
+	}).controller('MainCtrl', function($scope, $mdSidenav, $mdDialog, $mdToast, $rootScope, $interval, $location){
+		'use strict';
+
+		$scope.tasks = [];
 		// Load all Tasks
 		$scope.loadTasks = function loadTasks(){
 			$rootScope.ecs.listTasks({}, function(err, data){
