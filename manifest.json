@@ -6,12 +6,12 @@
 	"version": "0.0.2",
 
 	"app": {
-		"launch": {
-			"local_path": "index.html"
+		"background": {
+			"scripts": ["background.js"]
 		}
 	},
-
 	"permissions": [
-		"*://*.amazonaws.com/*"
+		"storage",
+		"https://ecs.us-east-1.amazonaws.com/"
 	]
 }
