@@ -152,15 +152,20 @@ angular.module('ECSTasker')
 			});
 		};
 
-	}).controller('SettingsCtrl', function($scope, $rootScope, AWSService, localStorageService, $location){
+	}).controller('SettingsCtrl', function($scope, $rootScope, AWSService, $location){
 		'use strict';
-		$rootScope.credentials = {
-			accessKeyId: localStorageService.get('AWSAccessKeyId'),
-			secretAccessKey: localStorageService.get('AWSSecretAccessKey'),
-		};
+		$rootScope.credentials = {};
+		chrome.storage.sync.get(['AWSAccessKeyId', 'AWSSecretAccessKey'], function(value){
+			$rootScope.credentials.accessKeyId = value.AWSAccessKeyId;
+			$rootScope.credentials.secretAccessKey = value.AWSSecretAccessKey;
+			$scope.$apply();
+		});
 		$scope.setCredentials = function(){
-			localStorageService.set('AWSAccessKeyId', $rootScope.credentials.accessKeyId);
-			localStorageService.set('AWSSecretAccessKey', $rootScope.credentials.secretAccessKey);
+			chrome.storage.sync.set({
+				AWSAccessKeyId: $rootScope.credentials.accessKeyId,
+				AWSSecretAccessKey: $rootScope.credentials.secretAccessKey,
+			}, function(){
+			});
 			var creds = new AWSService.Credentials($rootScope.credentials);
 			AWSService.config.region = 'us-east-1';
 			AWSService.config.credentials = creds;
