@@ -82,7 +82,7 @@ angular.module('ECSTasker')
 		}
 
 		$scope.showTaskActions = function showTaskActions(task, ev){
-			function TaskDialogController($scope, $mdDialog) {
+			function TaskDialogController($rootScope, $scope, $mdDialog) {
 				$scope.task = task;
 				$scope.hide = function() {
 					$mdDialog.hide();
@@ -99,9 +99,7 @@ angular.module('ECSTasker')
 						.hideDelay(3000)
 						);
 
-					$scope.task.status.name = 'STOPPING';
-					$scope.task.status.running = false;
-					$scope.task.status.stopped = false;
+					$scope.task.status = 'STOPPING';
 
 					$rootScope.ecs.stopTask({
 						task: $scope.task.id,
@@ -119,6 +117,17 @@ angular.module('ECSTasker')
 
 					$mdDialog.hide();
 				};
+				// Load detailed information about this task
+				$scope.taksContainer = {};
+				$rootScope.ecs.describeContainerInstances({
+					containerInstances: [task.data.containerInstanceArn],
+				}, function(err, containers){
+					console.log('Task Containers', containers);
+					$scope.taskContainer = containers.containerInstances[0];
+					$scope.$apply();
+				});
+
+
 			}
 			$mdDialog.show({
 				controller: TaskDialogController,

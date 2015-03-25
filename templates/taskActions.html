@@ -1,15 +1,11 @@
 <md-dialog aria-label="Task Actions">
 	<md-content>
 		<md-subheader class="md-sticky-no-effect">Task: {{task.id}}</md-subheader>
-		<p>{{task.name}}</p>
-		<ul>
-			<li ng-repeat="container in task.data.containers">
-				<b>{{container.lastStatus}}:</b> {{container.containerArn}}
-			</li>
-		</ul>
+		<p ng-bind="task.name"></p>
+		<b ng-bind="task.status"></b> ON <span ng-bind="taskContainer.ec2InstanceId"></span>
 	</md-content>
 	<div class="md-actions" layout="row">
 		<md-button ng-click="cancel();">Cancel</md-button>
-		<md-button ng-if="task.status.running" ng-click="stop();" class="md-raised md-warn">Stop</md-button>
+		<md-button ng-if="task.status === 'RUNNING'" ng-click="stop();" class="md-raised md-warn">Stop</md-button>
 	</div>
 </md-dialog>
