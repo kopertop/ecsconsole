@@ -38,21 +38,31 @@ angular.module('ECSTasker')
 		'use strict';
 
 		$scope.tasks = [];
+		$scope.showTaskGroup = {};
 		// Load all Tasks
 		$scope.loadTasks = function loadTasks(){
 			$rootScope.ecs.listTasks({}, function(err, data){
 				$scope.tasks.length = 0;
+				var taskGroups = {};
 				// Lookup all the tasks
 				$rootScope.ecs.describeTasks({ tasks: data.taskArns }, function(err, tasks){
 					_.forEach(tasks.tasks, function(task){
-						$scope.tasks.push({
+						// Group tasks into task Groups
+						var taskName = task.containers[0].name;
+						if(taskGroups[taskName] === undefined){
+							taskGroups[taskName] = {
+								name: taskName,
+								tasks: [],
+							};
+							$scope.tasks.push(taskGroups[taskName]);
+						}
+						if($scope.showTaskGroup[taskName] === undefined){
+							$scope.showTaskGroup[taskName] = false;
+						}
+						taskGroups[taskName].tasks.push({
 							id: task.taskArn.split('/')[1],
 							name: task.containers[0].name,
-							status: {
-								name: task.lastStatus,
-								running: task.lastStatus === 'RUNNING',
-								stopped: task.lastStatus !== 'RUNNING',
-							},
+							status: task.lastStatus,
 							data: task,
 						});
 					});

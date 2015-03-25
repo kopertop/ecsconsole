@@ -148,3 +148,7 @@ i.status {
   -webkit-transform: rotate(180deg);
 }
 /* End Menu */
+
+.ng-hide {
+	display: none !important;
+}

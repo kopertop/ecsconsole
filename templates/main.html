@@ -1,15 +1,25 @@
-<h2>Running Tasks</h2>
-<md-card id="{{task.id}}" style="cursor: pointer;" ng-repeat="task in tasks" ng-click="showTaskActions(task, $event)">
+<md-card id="task-{{taskGroup.name}}" style="cursor: pointer;" ng-repeat="taskGroup in tasks">
 	<md-card-content>
-		<div layout="row" layout-align="center center">
+		<div layout="row" layout-align="center center" ng-click="showTaskGroup[taskGroup.name] = !showTaskGroup[taskGroup.name]">
 			<div style="width: 4em">
-				<i ng-if="task.status.running" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
-				<i ng-if="task.status.stopped" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
-				<i ng-if="task.status.name === 'STOPPING'" class="fa fa-minus-circle" class="status stopping" style="color: #ccc; font-size: 3em;"></i>
+				({{taskGroup.tasks.length}})
 			</div>
 			<div flex>
-				<h3 ng-bind="task.name"></h3>
-				<code ng-bind="task.id"></code>
+				<h3 ng-bind="taskGroup.name"></h3>
+			</div>
+		</div>
+		<div class="ng-hide" ng-show="showTaskGroup[taskGroup.name]">
+			<div layout="row" layout-align="center center" ng-repeat="task in taskGroup.tasks" ng-click="showTaskActions(task, $event)">
+				<div style="width: 4em">
+					<i ng-if="task.status === 'RUNNING'" class="fa fa-arrow-circle-up" class="status running" style="color: green; font-size: 3em;"></i>
+					<i ng-if="task.status === 'STOPPED'" class="fa fa-arrow-circle-down" class="status stopped" style="color: red; font-size: 3em;"></i>
+					<i ng-if="task.status === 'STOPPING'" class="fa fa-minus-circle" class="status stopping" style="color: #ccc; font-size: 3em;"></i>
+					<i ng-if="task.status === 'PENDING'" class="fa fa-minus-circle" class="status stopping" style="color: #ccc; font-size: 3em;"></i>
+				</div>
+				<div flex>
+					<h3 ng-bind="task.name"></h3>
+					<code ng-bind="task.id"></code>
+				</div>
 			</div>
 		</div>
 	</md-card-content>
