@@ -20531,8 +20531,8 @@ AWS.CognitoIdentityCredentials = AWS.util.inherit(AWS.Credentials, {
    */
   storage: (function() {
     try {
-      return AWS.util.isBrowser() && typeof window.localStorage === 'object' ?
-             window.localStorage : {};
+      return AWS.util.isBrowser() && typeof chrome.storage.local === 'object' ?
+             chrome.storage.local : {};
     } catch (_) {
       return {};
     }
